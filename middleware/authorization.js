@@ -11,7 +11,7 @@ const authorizeCourseModification = async(req, res, next) => {
   const token = authHeader.split(' ')[1];
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    if (!payload.role === 'Hod/Dean' || !payload.role === 'Registration officer' || !payload.role === 'Examination officer') {
+    if (!payload.role === 'Hod/Dean' || !payload.role === 'Registration officer' || !payload.role === 'Lecturer' || !payload.role === 'Examination officer') {
       throw new UnauthenticatedError('Access denied');
     } else {
       next();

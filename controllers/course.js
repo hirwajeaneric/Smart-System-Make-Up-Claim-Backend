@@ -30,6 +30,27 @@ const findByCode = async(req, res) => {
     res.status(StatusCodes.OK).json({ course });
 };
 
+const findByLecturerId = async(req, res) => {
+    const lecturerId = req.query.lecturerId;
+    const allCourses = await Course.find({});
+    let courses = [];
+
+    allCourses.forEach(course => {
+        course.allocations.forEach(allocation => {
+            allocation.lecturers.forEach(lecturer => {
+                if (lecturer.lecturerId.toString() === lecturerId) {
+                    courses.push(course);
+                }
+            })
+        })
+    })
+
+    if (!courses) {
+        throw new BadRequestError(`No courses found`);
+    }
+    res.status(StatusCodes.OK).json({ courses });
+};
+
 const findByFaculty = async(req, res) => {
     const courseFaculty = req.query.faculty;
     const course = await Course.find({faculty: courseFaculty});
@@ -80,4 +101,4 @@ const updateCourse = async(req, res) => {
     res.status(StatusCodes.OK).json({ message: 'Course updated', payload: updatedCourse})
 };
 
-module.exports = { createCourse, getCourses, updateCourse, findByDepartment, findByFaculty, findByCode, findById, deleteCourse }
+module.exports = { createCourse, getCourses, updateCourse, findByDepartment, findByLecturerId, findByFaculty, findByCode, findById, deleteCourse }
