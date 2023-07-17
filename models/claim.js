@@ -48,6 +48,8 @@ const claimSchema = new mongoose.Schema({
         }
     ],
     totalClaimCost: { type: Number, required: true },
+    paidClaimCost: { type: Number, required: true },
+    dateOfPayment: { type: Date, required: false, default: Date.now()},
     studentSignature: { 
         type: String, 
         enum: { 
@@ -83,7 +85,7 @@ const claimSchema = new mongoose.Schema({
         comment: { type: String, required: false },
         dateOfSignature: { type: Date, required: false },  
     },
-    studentDisciplineOfficerSignature: {
+    deanOfStudentsSignature: {
         signature: { 
             type: String, 
             enum: { 
