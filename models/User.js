@@ -10,6 +10,10 @@ const UserSchema = new mongoose.Schema({
         maxlength: 50,
         minlength: 3,
     },
+    userName: {
+        type: String, 
+        required: false,
+    },
     registrationNumber: { 
         type: Number, 
         required: false, 
@@ -26,7 +30,7 @@ const UserSchema = new mongoose.Schema({
     },
     phone: { 
         type: String, 
-        required: [true, 'Phone number must be provided'] 
+        required: [true, 'Phone number must be provided'],
     },
     role: { 
         type: String, 
@@ -81,6 +85,11 @@ const UserSchema = new mongoose.Schema({
             }
         }
     ],
+    status: {
+        type: String,
+        required: true,
+        default: 'No'
+    }
 }) 
 
 UserSchema.pre('save', async function() {

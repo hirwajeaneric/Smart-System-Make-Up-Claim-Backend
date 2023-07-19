@@ -80,9 +80,16 @@ const signInAsStudent = async (req, res) => {
 
 const signUp = async (req, res) => {
     // Checking if the user is not already registered
-    const userExists = await User.findOne({ email: req.body.email })
-    if (userExists) {
-        res.status(StatusCodes.BAD_REQUEST).send({ msg: `User with the provide email already exists.` });
+    const userWithEmailExists = await User.findOne({ email: req.body.email })
+    if (userWithEmailExists) {
+        return res.status(StatusCodes.BAD_REQUEST).send({ msg: `User with the provided email already exists.` });
+    }
+
+    if (req.body.userName) {
+        const userWithUserNameExists = await User.findOne({ userName: req.body.userName })
+        if (userWithUserNameExists) {
+            return res.status(StatusCodes.BAD_REQUEST).send({ msg: `User with the provided user name already exists.` });
+        }
     }
 
     // Validate password
@@ -150,10 +157,6 @@ const findByRegistrationNumber = async(req, res, next) => {
 };
 
 const updateUser = async(req, res, next) => {
-    const { fullName, email, phone } = req.body;
-    if (!fullName || !email || !phone ) {
-        throw new BadRequestError('Your full name, email and phone number must be provided')
-    }
     const user = await User.findByIdAndUpdate({ _id: req.query.id }, req.body);
 	const updatedUser = await User.findById(user._id);
     const token = user.createJWT();

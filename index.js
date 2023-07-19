@@ -21,7 +21,7 @@ app.use('/api/v1/ssmec/', allRoutes);
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5555;
 
 const start = async () => {
   try {

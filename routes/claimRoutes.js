@@ -23,7 +23,6 @@ const {
 } = require('../controllers/claim');
 
 router.post('/add', upload.single('proofOfTuitionPayment'), calculateClaimCost, createClaim);
-
 router.get('/list', authorizeOfficialsClaimAccess, getClaims);
 router.get('/findById', findById);
 router.get('/findByRegistrationNumber', findByRegistrationNumber);
@@ -37,7 +36,6 @@ router.get('/findByRegistrationOfficerSignature', authorizeOfficialsClaimAccess,
 router.get('/findByStudentSignature', authorizeOfficialsClaimAccess, findByStudentSignature);
 router.get('/findByFaculty', authorizeOfficialsClaimAccess, findByFaculty);
 router.get('/findByDepartment', authorizeOfficialsClaimAccess, findByDepartment);
-
 router.put('/update', calculateClaimCost, updateClaims);
 router.put('/updateWithAttachment', upload.single('attachment'), calculateClaimCost, updateClaims);
 router.put('/updateWithExamPermit', upload.single('examPermit'), calculateClaimCost, updateClaims);

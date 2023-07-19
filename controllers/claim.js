@@ -110,7 +110,9 @@ const findByPaid = async (req, res) => {
     claims.forEach((claim) => {
         claim.courses.forEach((course) => {
             if (course.proofOfClaimPayment) {
-                paidClaims.push(claim);
+                if (!paidClaims.includes(claim)) {
+                    paidClaims.push(claim);
+                }
             }
         })
     });
@@ -118,11 +120,12 @@ const findByPaid = async (req, res) => {
 }
 
 const findByLecturerSignature = async (req, res) => {
+    const department = req.query.department;
     const claims = await Claim.find({});
     var lecturerSignedClaims = [];
     claims.forEach((claim) => {
         claim.courses.forEach((course) => {
-            if (course.lecturer.signature === 'Signed') {
+            if (course.lecturer.signature === 'Signed' && department === department) {
                 lecturerSignedClaims.push(claim);
             }
         })
