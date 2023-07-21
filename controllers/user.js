@@ -35,12 +35,13 @@ const signIn = async (req, res) => {
             id: user._id,
             email: user.email,
             fullName: user.fullName,
+            phone: user.phone,
             role: user.role,
             registrationNumber: user.registrationNumber,
             courses: user.courses,
             faculty: user.faculty, 
             department: user.department,
-            token,
+            token: token,
         }
     })
 };
@@ -68,21 +69,29 @@ const signInAsStudent = async (req, res) => {
             id: user._id,
             email: user.email,
             fullName: user.fullName,
+            phone: user.phone,
             role: user.role,
             registrationNumber: user.registrationNumber,
             courses: user.courses,
             faculty: user.faculty, 
             department: user.department,
-            token,
+            token: token,
         }
     })
 };
 
 const signUp = async (req, res) => {
     // Checking if the user is not already registered
-    const userExists = await User.findOne({ email: req.body.email })
-    if (userExists) {
-        res.status(StatusCodes.BAD_REQUEST).send({ msg: `User with the provide email already exists.` });
+    const userWithEmailExists = await User.findOne({ email: req.body.email })
+    if (userWithEmailExists) {
+        return res.status(StatusCodes.BAD_REQUEST).send({ msg: `User with the provided email already exists.` });
+    }
+
+    if (req.body.userName) {
+        const userWithUserNameExists = await User.findOne({ userName: req.body.userName })
+        if (userWithUserNameExists) {
+            return res.status(StatusCodes.BAD_REQUEST).send({ msg: `User with the provided user name already exists.` });
+        }
     }
 
     // Validate password
@@ -99,13 +108,14 @@ const signUp = async (req, res) => {
         user: {
             id: user._id,
             email: user.email,
+            phone: user.phone,
             fullName: user.fullName,
             role: user.role,
             registrationNumber: user.registrationNumber,
             courses: user.courses,
             faculty: user.faculty, 
             department: user.department,
-            token,
+            token: token,
         }
     })
 
@@ -150,25 +160,20 @@ const findByRegistrationNumber = async(req, res, next) => {
 };
 
 const updateUser = async(req, res, next) => {
-    const { fullName, email, phone } = req.body;
-    const userToBeUpdated = req.body;
-    if (!fullName || !email || !phone ) {
-        throw new BadRequestError('Your full name, email and phone number must be provided')
-    }
     const user = await User.findByIdAndUpdate({ _id: req.query.id }, req.body);
-
+	const updatedUser = await User.findById(user._id);
     const token = user.createJWT();
     res.status(StatusCodes.OK).json({
         message: "Account successfully updated!",
         user: {
-            email: user.email,
-            fullName: user.fullName,
-            role: user.role,
-            registrationNumber: user.role,
-            courses: user.courses,
-            faculty: user.faculty, 
-            department: user.department,
-            token,
+            email: updatedUser.email,
+            fullName: updatedUser.fullName,
+            role: updatedUser.role,
+            registrationNumber: updatedUser.role,
+            courses: updatedUser.courses,
+            faculty: updatedUser.faculty, 
+            department: updatedUser.department,
+            token: token,
         }
     })
 };

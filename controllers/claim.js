@@ -44,7 +44,7 @@ const createClaim = async (req, res) => {
         "./template/claimInitiated.handlebars"
     );
 
-    res.status(StatusCodes.CREATED).json({ message: 'Exam makeup claim initiated', payload: claim })
+    res.status(StatusCodes.CREATED).json({ message: 'Exam absence declared', claim })
 };
 
 const getClaims = async(req, res) => {
@@ -63,29 +63,30 @@ const findById = async(req, res) => {
 
 const findByRegistrationNumber = async(req, res) => {
     const registrationNumber = req.query.registrationNumber;
-    const claim = await Claim.find({ registrationNumber: registrationNumber });
-    if (!claim) {
+    const claims = await Claim.find({ registrationNumber: registrationNumber });
+    if (!claims) {
         throw new BadRequestError(`Claim not found for registration number : ${registrationNumber}`);
     }
-    res.status(StatusCodes.OK).json({ nbHits: claim.length, claim });
+    res.status(StatusCodes.OK).json({ claims });
 };
 
 const findByFaculty = async(req, res) => {
     const faculty = req.query.faculty;
-    const claim = await Claim.find({ faculty: faculty });
-    if (!claim) {
+    const claims = await Claim.find({ faculty: faculty });
+    if (!claims) {
         throw new BadRequestError(`No claim found for faculty : ${faculty}`);
     }
-    res.status(StatusCodes.OK).json({ nbHits: claim.length, claim });
+    res.status(StatusCodes.OK).json({ claims });
 };
 
 const findByDepartment = async(req, res) => {
     const department = req.query.department;
-    const claim = await Claim.find({ department: department });
-    if (!claim) {
+    const claims = await Claim.find({ department: department });
+    
+    if (!claims) {
         throw new BadRequestError(`No claim found for department : ${department}`);
     }
-    res.status(StatusCodes.OK).json({ nbHits: claim.length, claim });
+    res.status(StatusCodes.OK).json({ nbHits: claim.length, claims });
 };
 
 const findByCourse = async(req, res) => {
@@ -100,8 +101,86 @@ const findByCourse = async(req, res) => {
     if (!claims) {
         throw new BadRequestError(`No claim found for course code : ${courseCode}`);
     }
-    res.status(StatusCodes.OK).json({ nbHits: claims.length, claims });
+    res.status(StatusCodes.OK).json({ claims });
 };
+
+const findByPaid = async (req, res) => {
+    const claims = await Claim.find({});
+    var paidClaims = [];
+    claims.forEach((claim) => {
+        claim.courses.forEach((course) => {
+            if (course.proofOfClaimPayment) {
+                if (!paidClaims.includes(claim)) {
+                    paidClaims.push(claim);
+                }
+            }
+        })
+    });
+    res.status(StatusCodes.OK).json({ paidClaims });
+}
+
+const findByLecturerSignature = async (req, res) => {
+    const department = req.query.department;
+    const claims = await Claim.find({});
+    var lecturerSignedClaims = [];
+    claims.forEach((claim) => {
+        claim.courses.forEach((course) => {
+            if (course.lecturer.signature === 'Signed' && department === department) {
+                lecturerSignedClaims.push(claim);
+            }
+        })
+    });
+    res.status(StatusCodes.OK).json({ claims: lecturerSignedClaims });
+}
+
+const findByDepartmentSignature = async (req, res) => {
+    const claims = await Claim.find({});
+    var departmentSignedClaims = [];
+    claims.forEach(claim => {
+        if (claim.hodDeanSignature.signature === 'Signed') {
+            departmentSignedClaims.push(claim);
+        }
+    })
+    res.status(StatusCodes.OK).json({ claims: departmentSignedClaims });
+}
+
+const findByStudentSignature = async (req, res) => {
+    const studentSignedClaims = await Claim.find({ studentSignature: 'Signed'});
+    res.status(StatusCodes.OK).json({ claims: studentSignedClaims });
+}
+
+const findByAccountantSignature = async (req, res) => {
+    const claims = await Claim.find({});
+    var accountantSignedClaims = [];
+    claims.forEach(claim => {
+        if (claim.accountantSignature.signature === 'Signed') {
+            accountantSignedClaims.push(claim);
+        }
+    })
+    res.status(StatusCodes.OK).json({ claims: accountantSignedClaims });
+}
+
+const findByRegistrationOfficerSignature = async (req, res) => {
+    const claims = await Claim.find({});
+    var registrationSignedClaims = [];
+    claims.forEach(claim => {
+        if (claim.registrationOfficerSignature.signature === 'Signed') {
+            registrationSignedClaims.push(claim);
+        }
+    })
+    res.status(StatusCodes.OK).json({ claims: registrationSignedClaims });
+}
+
+const findByDeanOfStudentSignature = async (req, res) => {
+    const claims = await Claim.find({});
+    var deanOfStudentSignedClaims = [];
+    claims.forEach(claim => {
+        if (claim.deanOfStudentsSignature.signature === 'Signed') {
+            deanOfStudentSignedClaims.push(claim);
+        }
+    })
+    res.status(StatusCodes.OK).json({ claims: deanOfStudentSignedClaims });
+}
 
 const updateClaims = async(req, res) => {
     const claim = req.body;
@@ -113,4 +192,22 @@ const updateClaims = async(req, res) => {
     res.status(StatusCodes.OK).json({ message: 'Claim updated', payload: updatedClaim })
 };
 
-module.exports = { createClaim, getClaims, findById, findByCourse, findByDepartment, findByFaculty, findByRegistrationNumber, updateClaims, upload, attachFile }
+module.exports = { 
+    createClaim, 
+    getClaims, 
+    findById, 
+    findByCourse, 
+    findByDepartment, 
+    findByFaculty, 
+    findByRegistrationNumber,
+    findByAccountantSignature,
+    findByDeanOfStudentSignature, 
+    findByLecturerSignature,
+    findByRegistrationOfficerSignature,
+    findByStudentSignature,
+    findByDepartmentSignature,
+    findByPaid,
+    updateClaims, 
+    upload, 
+    attachFile 
+};

@@ -10,6 +10,10 @@ const UserSchema = new mongoose.Schema({
         maxlength: 50,
         minlength: 3,
     },
+    userName: {
+        type: String, 
+        required: false,
+    },
     registrationNumber: { 
         type: Number, 
         required: false, 
@@ -26,13 +30,13 @@ const UserSchema = new mongoose.Schema({
     },
     phone: { 
         type: String, 
-        required: [true, 'Phone number must be provided'] 
+        required: [true, 'Phone number must be provided'],
     },
     role: { 
         type: String, 
         required: true,
         enum: {
-            values: ['Student', 'Hod/Dean', 'Accountant', 'Registration officer', 'Examination officer', 'Lecturer', 'Director of student discipline'],
+            values: ['Student', 'Hod/Dean', 'Accountant', 'Registration Officer', 'Examination Officer', 'Teacher', 'Dean of Students'],
             message: '{VALUE} is not supported as a role.'
         } 
     },
@@ -81,6 +85,11 @@ const UserSchema = new mongoose.Schema({
             }
         }
     ],
+    status: {
+        type: String,
+        required: true,
+        default: 'No'
+    }
 }) 
 
 UserSchema.pre('save', async function() {

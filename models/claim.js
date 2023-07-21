@@ -14,6 +14,8 @@ const claimSchema = new mongoose.Schema({
     phone: { type: String, required: [ true, 'Phone number must be provided' ] },
     faculty: { type: String, required: [ true, 'Faculty must be provided' ] },
     department: { type: String, required: [ true, 'Department must be provided' ] },
+    academicYear: { type: String, required: [ true, 'Academic year must be provided' ] },
+    semester: { type: String, required: [ true, 'Semester must be provided' ] },
     courses: [
         { 
             courseName: { type: String, required: [true, 'Course name must be provided'] },
@@ -46,6 +48,8 @@ const claimSchema = new mongoose.Schema({
         }
     ],
     totalClaimCost: { type: Number, required: true },
+    paidClaimCost: { type: Number, required: true },
+    dateOfPayment: { type: Date, required: false, default: Date.now()},
     studentSignature: { 
         type: String, 
         enum: { 
@@ -81,7 +85,7 @@ const claimSchema = new mongoose.Schema({
         comment: { type: String, required: false },
         dateOfSignature: { type: Date, required: false },  
     },
-    studentDisciplineOfficerSignature: {
+    deanOfStudentsSignature: {
         signature: { 
             type: String, 
             enum: { 
