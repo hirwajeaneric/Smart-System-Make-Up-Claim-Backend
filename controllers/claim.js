@@ -16,17 +16,19 @@ const upload = multer({ storage: multerStorage});
 const attachFile = (req, res, next) => {
     const { courses, ...otherData } = req.body;
     
+    if (otherData.proofOfTuitionPayment !== '') {
+        req.body.proofOfTuitionPayment = req.file.filename;
+    } else if (otherData.examPermit !== '') {
+        req.body.examPermit = req.file.filename;
+    } else if (otherData.proofOfClaimPayment !== '') {
+        req.body.proofOfClaimPayment = req.file.filename;
+    } else if (otherData.otherAttachment !== '') {
+        req.body.otherAttachment = req.file.filename;
+    }
+    
     courses.forEach((element, index) => {
         if (element.lecturer.attachment !== '') {
             req.body.courses[index].lecturer.attachment = req.file.filename;    
-        } else if (element.examPermit !== '') {
-            req.body.courses[index].examPermit = req.file.filename;
-        } else if (element.proofOfTuitionPayment !== '') {
-            req.body.courses[index].proofOfTuitionPayment = req.file.filename;
-        } else if (element.proofOfClaimPayment !== '') {
-            req.body.courses[index].proofOfClaimPayment = req.file.filename;
-        } else if (element.otherAttachments !== '') {
-            req.body.courses[index].otherAttachments = req.file.filename;
         }
     });
     next();

@@ -35,6 +35,7 @@ const signIn = async (req, res) => {
             id: user._id,
             email: user.email,
             fullName: user.fullName,
+            userName: user.userName,
             phone: user.phone,
             role: user.role,
             registrationNumber: user.registrationNumber,
@@ -69,6 +70,7 @@ const signInAsStudent = async (req, res) => {
             id: user._id,
             email: user.email,
             fullName: user.fullName,
+            userName: user.userName,
             phone: user.phone,
             role: user.role,
             registrationNumber: user.registrationNumber,
@@ -105,11 +107,13 @@ const signUp = async (req, res) => {
     const user = await User.create({...req.body});
     const token = user.createJWT();
     res.status(StatusCodes.CREATED).json({
+        message: 'Account created',
         user: {
             id: user._id,
             email: user.email,
             phone: user.phone,
             fullName: user.fullName,
+            userName: user.userName,
             role: user.role,
             registrationNumber: user.registrationNumber,
             courses: user.courses,
@@ -168,6 +172,7 @@ const updateUser = async(req, res, next) => {
         user: {
             email: updatedUser.email,
             fullName: updatedUser.fullName,
+            userName: user.userName,
             role: updatedUser.role,
             registrationNumber: updatedUser.role,
             courses: updatedUser.courses,

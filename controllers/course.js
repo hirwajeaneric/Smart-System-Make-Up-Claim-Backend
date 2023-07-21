@@ -31,19 +31,24 @@ const findByCode = async(req, res) => {
 };
 
 const findByLecturerId = async(req, res) => {
+    console.log(req.query);
     const lecturerId = req.query.lecturerId;
     const allCourses = await Course.find({});
+    // console.log(allCourses);
     let courses = [];
 
     allCourses.forEach(course => {
         course.allocations.forEach(allocation => {
             allocation.lecturers.forEach(lecturer => {
+                console.log(lecturer.lecturerId.toString());
                 if (lecturer.lecturerId.toString() === lecturerId) {
                     courses.push(course);
                 }
             })
         })
     })
+
+    console.log(courses);
 
     if (!courses) {
         throw new BadRequestError(`No courses found`);
