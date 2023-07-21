@@ -44,7 +44,7 @@ const createClaim = async (req, res) => {
         "./template/claimInitiated.handlebars"
     );
 
-    res.status(StatusCodes.CREATED).json({ message: 'Exam makeup claim initiated', payload: claim })
+    res.status(StatusCodes.CREATED).json({ message: 'Exam absence declared', claim })
 };
 
 const getClaims = async(req, res) => {

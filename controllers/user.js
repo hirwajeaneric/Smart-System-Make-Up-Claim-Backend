@@ -35,6 +35,7 @@ const signIn = async (req, res) => {
             id: user._id,
             email: user.email,
             fullName: user.fullName,
+            phone: user.phone,
             role: user.role,
             registrationNumber: user.registrationNumber,
             courses: user.courses,
@@ -68,6 +69,7 @@ const signInAsStudent = async (req, res) => {
             id: user._id,
             email: user.email,
             fullName: user.fullName,
+            phone: user.phone,
             role: user.role,
             registrationNumber: user.registrationNumber,
             courses: user.courses,
@@ -106,6 +108,7 @@ const signUp = async (req, res) => {
         user: {
             id: user._id,
             email: user.email,
+            phone: user.phone,
             fullName: user.fullName,
             role: user.role,
             registrationNumber: user.registrationNumber,
