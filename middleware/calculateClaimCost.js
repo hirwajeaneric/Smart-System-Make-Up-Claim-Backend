@@ -1,7 +1,5 @@
 const calculateClaimCost = async (req, res, next) => {
     const { faculty, courses } = req.body;
-
-    console.log(req.body);
     
     let totalClaimCost = 0;
     let creditCost = 0;

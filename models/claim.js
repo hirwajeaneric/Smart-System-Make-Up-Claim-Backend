@@ -20,11 +20,11 @@ const claimSchema = new mongoose.Schema({
         { 
             courseName: { type: String, required: [true, 'Course name must be provided'] },
             courseCode: { type: String, required: [true, 'Course code must be provided'] },
-            semester: { type: Number, required: [true, 'Semester must be provided'] },
+            semester: { type: String, required: [true, 'Semester must be provided'] },
             academicYear: { type: String, required: [true, 'Academic year must be provided'] },
             credits: { type: Number, required: [true, 'Credits must be provided'] },
             lecturer: { 
-                id: { type: Schema.Types.ObjectId, required: 'false', ref: 'User' },
+                id: { type: Schema.Types.ObjectId, required: false, ref: 'User' },
                 name: { type: String, required: false },
                 comment: { type: String, required: false },
                 attachment: { type: String, required: false },

@@ -7,30 +7,31 @@ const multer= require('multer');
 // Establishing a multer storage
 const multerStorage = multer.diskStorage({
     destination: (req, file, callback) => { callback(null, './uploads') },
-    filename: (req, file, callback) => { callback(null, `${file.originalname}`) }
+    filename: (req, file, callback) => { callback(null, `${file.fieldname}${file.originalname}`) }
 })
 
 const upload = multer({ storage: multerStorage});
 
 // Middleware for attaching files to the request body before saving.
 const attachFile = (req, res, next) => {
-    const { courses, ...otherData } = req.body;
-    
-    if (otherData.proofOfTuitionPayment !== '') {
+    if (req.file.fieldname === 'proofOfTuitionPayment') {
         req.body.proofOfTuitionPayment = req.file.filename;
-    } else if (otherData.examPermit !== '') {
+    } else if (req.file.fieldname === 'examPermit') {
         req.body.examPermit = req.file.filename;
-    } else if (otherData.proofOfClaimPayment !== '') {
+    } else if (req.file.fieldname === 'proofOfClaimPayment') {
         req.body.proofOfClaimPayment = req.file.filename;
-    } else if (otherData.otherAttachment !== '') {
+    } else if (req.file.fieldname === 'otherAttachment') {
         req.body.otherAttachment = req.file.filename;
     }
     
-    courses.forEach((element, index) => {
-        if (element.lecturer.attachment !== '') {
-            req.body.courses[index].lecturer.attachment = req.file.filename;    
-        }
-    });
+    if (req.file.fieldname === 'attachment') {
+        req.body.courses.forEach((element, index) => {
+            if (element.lecturer.attachment !== '') {
+                req.body.courses[index].lecturer.attachment = req.file.filename;    
+            }
+        });
+    }
+
     next();
 }
 
