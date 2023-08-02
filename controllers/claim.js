@@ -50,6 +50,7 @@ const createClaim = async (req, res) => {
 };
 
 const getClaims = async(req, res) => {
+    console.log(req.body);
     const claims = await Claim.find({})
     res.status(StatusCodes.OK).json({ nbHits: claims.length, claims })
 };

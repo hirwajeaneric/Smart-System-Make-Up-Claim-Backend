@@ -24,8 +24,8 @@ const claimSchema = new mongoose.Schema({
             academicYear: { type: String, required: [true, 'Academic year must be provided'] },
             credits: { type: Number, required: [true, 'Credits must be provided'] },
             lecturer: { 
-                id: { type: Schema.Types.ObjectId, required: 'true', ref: 'User' },
-                name: { type: String, required: [false, 'Course Lecturer must be provided']},
+                id: { type: Schema.Types.ObjectId, required: 'false', ref: 'User' },
+                name: { type: String, required: false },
                 comment: { type: String, required: false },
                 attachment: { type: String, required: false },
                 signature: { 
@@ -47,8 +47,8 @@ const claimSchema = new mongoose.Schema({
     proofOfTuitionPayment: { type: String, required: [true, 'A registration form that proves that you have submitted full semester payment must be provided'] },
     proofOfClaimPayment: { type: String, required: false },
     otherAttachment: { type: String, required: false },
-    totalClaimCost: { type: Number, required: true },
-    paidClaimCost: { type: Number, required: true },
+    totalClaimCost: { type: Number, required: false },
+    paidClaimCost: { type: Number, required: false },
     dateOfPayment: { type: Date, required: false, default: Date.now()},
     studentSignature: { 
         type: String, 

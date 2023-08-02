@@ -1,7 +1,8 @@
-const Claim = require('../models/claim');
+const calculateClaimCost = async (req, res, next) => {
+    const { faculty, courses } = req.body;
 
-const calculateClaimCost = (req, res, next) => {
-    const { registrationNumber, faculty, courses, ...otherData } = req.body;
+    console.log(req.body);
+    
     let totalClaimCost = 0;
     let creditCost = 0;
 
