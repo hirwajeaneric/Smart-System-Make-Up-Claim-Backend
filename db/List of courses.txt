@@ -1,0 +1,64 @@
+COURSES:
+
+{
+  "code":"DBMS 234",
+  "name":"DBMS",
+  "credits":"4",
+  "faculty":"IT",
+  "department":"All",
+  "allocations": [
+    {
+      "academicYear":"2022-2023",
+      "semester":"3",
+      "lecturers": [
+        {
+          "lecturerId":"6404487058703c8ff72c5f60",
+          "name":"Jerome RWEGO"
+        }  
+      ],
+      "groups": [ "A", "B", "E" ]
+    }  
+  ]
+}
+
+{
+  "code":"MATH 123",
+  "name":"Probability and Statistics",
+  "credits":"3",
+  "faculty":"IT",
+  "department":"All",
+  "allocations": [
+    {
+      "academicYear":"2022-2023",
+      "semester":"3",
+      "lecturers": [
+        {
+          "lecturerId":"6404487058703c8ff72c5f60",
+          "name":"Jerome RWEGO"
+        }  
+      ],
+      "groups": [ "A", "B", "E" ]
+    }  
+  ]
+}
+
+{
+  "code":"INSY 214",
+  "name":"Web Technolologies",
+  "credits":"4",
+  "faculty":"IT",
+  "department":"All",
+  "allocations": [
+    {
+      "academicYear":"2022-2023",
+      "semester":"3",
+      "lecturers": [
+        {
+          "lecturerId":"6404487058703c8ff72c5f60",
+          "name":"Jerome RWEGO"
+        }  
+      ],
+      "groups": [ "A", "B", "C" ]
+    }  
+  ]
+}

@@ -29,7 +29,7 @@ const studentRegistrationSchema = new mongoose.Schema({
     },
     courses: {
         type: Array,
-        required: true,
+        required: false,
     }
 });
 

@@ -19,10 +19,11 @@ const {
     findByRegistrationOfficerSignature,
     findByStudentSignature, 
     getClaims, 
+    attachFile,
     upload 
 } = require('../controllers/claim');
 
-router.post('/add', upload.single('proofOfTuitionPayment'), calculateClaimCost, createClaim);
+router.post('/add', upload.single('proofOfTuitionPayment'), attachFile, calculateClaimCost, createClaim);
 router.get('/list', authorizeOfficialsClaimAccess, getClaims);
 router.get('/findById', findById);
 router.get('/findByRegistrationNumber', findByRegistrationNumber);
@@ -37,9 +38,9 @@ router.get('/findByStudentSignature', authorizeOfficialsClaimAccess, findByStude
 router.get('/findByFaculty', authorizeOfficialsClaimAccess, findByFaculty);
 router.get('/findByDepartment', authorizeOfficialsClaimAccess, findByDepartment);
 router.put('/update', calculateClaimCost, updateClaims);
-router.put('/updateWithAttachment', upload.single('attachment'), calculateClaimCost, updateClaims);
-router.put('/updateWithExamPermit', upload.single('examPermit'), calculateClaimCost, updateClaims);
-router.put('/updateWithProofOfClaimPayment', upload.single('proofOfClaimPayment'), calculateClaimCost, updateClaims);
-router.put('/updateWithOtherAttachments', upload.single('otherAttachments'), calculateClaimCost, updateClaims);
+router.put('/updateWithAttachment', upload.single('attachment'), attachFile, calculateClaimCost, updateClaims);
+router.put('/updateWithExamPermit', upload.single('examPermit'), attachFile, calculateClaimCost, updateClaims);
+router.put('/updateWithProofOfClaimPayment', upload.single('proofOfClaimPayment'), attachFile, calculateClaimCost, updateClaims);
+router.put('/updateWithOtherAttachments', upload.single('otherAttachments'), attachFile, calculateClaimCost, updateClaims);
 
 module.exports = router;

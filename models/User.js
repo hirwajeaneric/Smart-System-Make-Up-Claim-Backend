@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         required: true,
         enum: {
-            values: ['Student', 'Hod/Dean', 'Accountant', 'Registration Officer', 'Examination Officer', 'Teacher', 'Dean of Students'],
+            values: ['Student', 'Head of Department', 'Accountant', 'Registration Officer', 'Examination Officer', 'Teacher', 'Dean of Students'],
             message: '{VALUE} is not supported as a role.'
         } 
     },

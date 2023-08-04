@@ -7,28 +7,31 @@ const multer= require('multer');
 // Establishing a multer storage
 const multerStorage = multer.diskStorage({
     destination: (req, file, callback) => { callback(null, './uploads') },
-    filename: (req, file, callback) => { callback(null, `${file.originalname}`) }
+    filename: (req, file, callback) => { callback(null, `${file.fieldname}${file.originalname}`) }
 })
 
 const upload = multer({ storage: multerStorage});
 
 // Middleware for attaching files to the request body before saving.
 const attachFile = (req, res, next) => {
-    const { courses, ...otherData } = req.body;
+    if (req.file.fieldname === 'proofOfTuitionPayment') {
+        req.body.proofOfTuitionPayment = req.file.filename;
+    } else if (req.file.fieldname === 'examPermit') {
+        req.body.examPermit = req.file.filename;
+    } else if (req.file.fieldname === 'proofOfClaimPayment') {
+        req.body.proofOfClaimPayment = req.file.filename;
+    } else if (req.file.fieldname === 'otherAttachment') {
+        req.body.otherAttachment = req.file.filename;
+    }
     
-    courses.forEach((element, index) => {
-        if (element.lecturer.attachment !== '') {
-            req.body.courses[index].lecturer.attachment = req.file.filename;    
-        } else if (element.examPermit !== '') {
-            req.body.courses[index].examPermit = req.file.filename;
-        } else if (element.proofOfTuitionPayment !== '') {
-            req.body.courses[index].proofOfTuitionPayment = req.file.filename;
-        } else if (element.proofOfClaimPayment !== '') {
-            req.body.courses[index].proofOfClaimPayment = req.file.filename;
-        } else if (element.otherAttachments !== '') {
-            req.body.courses[index].otherAttachments = req.file.filename;
-        }
-    });
+    if (req.file.fieldname === 'attachment') {
+        req.body.courses.forEach((element, index) => {
+            if (element.lecturer.attachment !== '') {
+                req.body.courses[index].lecturer.attachment = req.file.filename;    
+            }
+        });
+    }
+
     next();
 }
 
@@ -48,6 +51,7 @@ const createClaim = async (req, res) => {
 };
 
 const getClaims = async(req, res) => {
+    console.log(req.body);
     const claims = await Claim.find({})
     res.status(StatusCodes.OK).json({ nbHits: claims.length, claims })
 };

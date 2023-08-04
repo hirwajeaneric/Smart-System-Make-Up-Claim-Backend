@@ -4,7 +4,7 @@ const { BadRequestError, NotFoundError } = require('../errors/index');
 
 const createStudentRegistration = async (req, res) => {
     const studentRegistration = await StudentRegistration.create(req.body);
-    res.status(StatusCodes.CREATED).json({ message: 'Student registered', payload: studentRegistration })
+    res.status(StatusCodes.CREATED).json({ message: 'Student registered', studentRegistration })
 };
 
 const getStudentRegistrations = async(req, res) => {
