@@ -49,7 +49,7 @@ const claimSchema = new mongoose.Schema({
     otherAttachment: { type: String, required: false },
     totalClaimCost: { type: Number, required: false },
     paidClaimCost: { type: Number, required: false },
-    dateOfPayment: { type: Date, required: false, default: Date.now()},
+    dateOfPayment: { type: Date, required: false},
     studentSignature: { 
         type: String, 
         enum: { 
@@ -123,6 +123,15 @@ const claimSchema = new mongoose.Schema({
         },
         comment: { type: String, required: false },
         dateOfSignature: { type: Date, required: false },  
+    },
+    status: { 
+        type: String,
+        require: true,
+        enum: { 
+            values: ['Pending','In Progress', 'Confirmed'],
+            message: '{VALUE} is not supported as a signature'
+        }, 
+        default: 'Pending', 
     },
     submitDate: { type: Date, default: Date.now() }
 }) 

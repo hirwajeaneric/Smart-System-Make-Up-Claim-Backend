@@ -7,13 +7,15 @@ const multer= require('multer');
 // Establishing a multer storage
 const multerStorage = multer.diskStorage({
     destination: (req, file, callback) => { callback(null, './uploads') },
-    filename: (req, file, callback) => { callback(null, `${file.fieldname}${file.originalname}`) }
+    filename: (req, file, callback) => { callback(null, `${file.fieldname}-${file.originalname}`) }
 })
 
 const upload = multer({ storage: multerStorage});
 
 // Middleware for attaching files to the request body before saving.
 const attachFile = (req, res, next) => {
+    console.log(req.body);
+
     if (req.file.fieldname === 'proofOfTuitionPayment') {
         req.body.proofOfTuitionPayment = req.file.filename;
     } else if (req.file.fieldname === 'examPermit') {
@@ -23,6 +25,8 @@ const attachFile = (req, res, next) => {
     } else if (req.file.fieldname === 'otherAttachment') {
         req.body.otherAttachment = req.file.filename;
     }
+
+    console.log(req.body);
     
     if (req.file.fieldname === 'attachment') {
         req.body.courses.forEach((element, index) => {
@@ -32,6 +36,7 @@ const attachFile = (req, res, next) => {
         });
     }
 
+    console.log(req.body);
     next();
 }
 
@@ -48,6 +53,12 @@ const createClaim = async (req, res) => {
     );
 
     res.status(StatusCodes.CREATED).json({ message: 'Exam absence declared', claim })
+};
+
+const updateClaims = async(req, res) => {
+    const updated = await Claim.findByIdAndUpdate({_id: req.query.id}, req.body);
+    const updatedClaim = await Claim.findById(updated._id);
+    res.status(StatusCodes.OK).json({ message: 'Claim updated', payload: updatedClaim })
 };
 
 const getClaims = async(req, res) => {
@@ -185,16 +196,6 @@ const findByDeanOfStudentSignature = async (req, res) => {
     })
     res.status(StatusCodes.OK).json({ claims: deanOfStudentSignedClaims });
 }
-
-const updateClaims = async(req, res) => {
-    const claim = req.body;
-    const claimId = req.query.id;
-    
-    const updated = await Claim.findByIdAndUpdate({ _id: claimId }, req.body);
-    const updatedClaim = await Claim.findById(updated._id);
-
-    res.status(StatusCodes.OK).json({ message: 'Claim updated', payload: updatedClaim })
-};
 
 module.exports = { 
     createClaim, 
