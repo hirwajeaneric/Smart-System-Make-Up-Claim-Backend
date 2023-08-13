@@ -7,7 +7,8 @@ const {
     findById, 
     findByDepartment, 
     findByFaculty, 
-    updateClaims, 
+    updateClaims,
+    remove, 
     createClaim, 
     findByCourse, 
     findByRegistrationNumber,
@@ -38,9 +39,11 @@ router.get('/findByStudentSignature', authorizeOfficialsClaimAccess, findByStude
 router.get('/findByFaculty', authorizeOfficialsClaimAccess, findByFaculty);
 router.get('/findByDepartment', authorizeOfficialsClaimAccess, findByDepartment);
 router.put('/update', calculateClaimCost, updateClaims);
-router.put('/updateWithAttachment', upload.single('attachment'), attachFile, calculateClaimCost, updateClaims);
+router.put('/updateWithAttachment', upload.single('attachment'), attachFile, updateClaims);
 router.put('/updateWithExamPermit', upload.single('examPermit'), attachFile, calculateClaimCost, updateClaims);
 router.put('/updateWithProofOfClaimPayment', upload.single('proofOfClaimPayment'), attachFile, calculateClaimCost, updateClaims);
 router.put('/updateWithOtherAttachments', upload.single('otherAttachments'), attachFile, calculateClaimCost, updateClaims);
+router.delete('/delete', remove);
+
 
 module.exports = router;

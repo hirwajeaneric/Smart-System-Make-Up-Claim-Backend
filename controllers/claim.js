@@ -24,16 +24,8 @@ const attachFile = (req, res, next) => {
         req.body.proofOfClaimPayment = req.file.filename;
     } else if (req.file.fieldname === 'otherAttachment') {
         req.body.otherAttachment = req.file.filename;
-    }
-
-    console.log(req.body);
-    
-    if (req.file.fieldname === 'attachment') {
-        req.body.courses.forEach((element, index) => {
-            if (element.lecturer.attachment !== '') {
-                req.body.courses[index].lecturer.attachment = req.file.filename;    
-            }
-        });
+    } else if (req.file.fieldname === 'attachment') {
+        req.body.attachment = req.file.filename;
     }
 
     console.log(req.body);
@@ -59,6 +51,17 @@ const updateClaims = async(req, res) => {
     const updated = await Claim.findByIdAndUpdate({_id: req.query.id}, req.body);
     const updatedClaim = await Claim.findById(updated._id);
     res.status(StatusCodes.OK).json({ message: 'Claim updated', payload: updatedClaim })
+};
+
+const remove = async(req, res) => {
+    const claimId = req.query.id;
+    const deletedClaim = await Claim.findByIdAndRemove({ _id: claimId});
+
+    if (!deletedClaim) {
+        throw new NotFoundError(`Claim not found!`);
+    }
+
+    res.status(StatusCodes.OK).json({ message: 'Deleted'})
 };
 
 const getClaims = async(req, res) => {
@@ -200,6 +203,7 @@ const findByDeanOfStudentSignature = async (req, res) => {
 module.exports = { 
     createClaim, 
     getClaims, 
+    remove,
     findById, 
     findByCourse, 
     findByDepartment, 
