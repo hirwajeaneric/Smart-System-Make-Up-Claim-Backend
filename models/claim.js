@@ -27,7 +27,6 @@ const claimSchema = new mongoose.Schema({
                 id: { type: Schema.Types.ObjectId, required: false, ref: 'User' },
                 name: { type: String, required: false },
                 comment: { type: String, required: false },
-                attachment: { type: String, required: false },
                 signature: { 
                     type: String, 
                     enum: { 
@@ -46,10 +45,11 @@ const claimSchema = new mongoose.Schema({
     examPermit: { type: String, required: false },
     proofOfTuitionPayment: { type: String, required: [true, 'A registration form that proves that you have submitted full semester payment must be provided'] },
     proofOfClaimPayment: { type: String, required: false },
+    attachment: { type: String, required: false },
     otherAttachment: { type: String, required: false },
     totalClaimCost: { type: Number, required: false },
     paidClaimCost: { type: Number, required: false },
-    dateOfPayment: { type: Date, required: false, default: Date.now()},
+    dateOfPayment: { type: Date, required: false},
     studentSignature: { 
         type: String, 
         enum: { 
@@ -123,6 +123,15 @@ const claimSchema = new mongoose.Schema({
         },
         comment: { type: String, required: false },
         dateOfSignature: { type: Date, required: false },  
+    },
+    status: { 
+        type: String,
+        require: true,
+        enum: { 
+            values: ['Pending','In Progress', 'Confirmed'],
+            message: '{VALUE} is not supported as a signature'
+        }, 
+        default: 'Pending', 
     },
     submitDate: { type: Date, default: Date.now() }
 }) 
