@@ -124,17 +124,8 @@ const findByCourse = async(req, res) => {
 
 const findByPaid = async (req, res) => {
     const claims = await Claim.find({});
-    var paidClaims = [];
-    claims.forEach((claim) => {
-        claim.courses.forEach((course) => {
-            if (course.proofOfClaimPayment) {
-                if (!paidClaims.includes(claim)) {
-                    paidClaims.push(claim);
-                }
-            }
-        })
-    });
-    res.status(StatusCodes.OK).json({ paidClaims });
+    var paidClaims = claims.filter(element => element.proofOfClaimPayment && element.hodDeanSignature.signature === 'Signed');
+    res.status(StatusCodes.OK).json({ claims: paidClaims });
 }
 
 const findByLecturerSignature = async (req, res) => {
@@ -174,7 +165,8 @@ const findByAccountantSignature = async (req, res) => {
         if (claim.accountantSignature.signature === 'Signed') {
             accountantSignedClaims.push(claim);
         }
-    })
+    });
+    
     res.status(StatusCodes.OK).json({ claims: accountantSignedClaims });
 }
 
