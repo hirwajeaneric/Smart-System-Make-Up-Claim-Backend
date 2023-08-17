@@ -128,8 +128,8 @@ const claimSchema = new mongoose.Schema({
         type: String,
         require: true,
         enum: { 
-            values: ['Pending','In Progress', 'Confirmed'],
-            message: '{VALUE} is not supported as a signature'
+            values: ['Pending','In Progress', 'Confirmed', 'Rejected'],
+            message: '{VALUE} is not supported as a status'
         }, 
         default: 'Pending', 
     },
