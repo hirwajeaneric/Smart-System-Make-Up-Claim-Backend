@@ -22,7 +22,11 @@ const notificationSchema = new mongoose.Schema({
     department: { 
         type: String, 
         required: false,  
-    }, 
+    },
+    claimId: { 
+        type: String, 
+        required: true,  
+    },  
     status: { 
         type: String,
         require: true,
