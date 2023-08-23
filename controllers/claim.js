@@ -26,6 +26,8 @@ const attachFile = (req, res, next) => {
         req.body.otherAttachment = req.file.filename;
     } else if (req.file.fieldname === 'attachment') {
         req.body.attachment = req.file.filename;
+    } else if (req.file.fieldname === 'absenceJustification') {
+        req.body.absenceJustification = req.file.filename;
     }
 
     console.log(req.body);

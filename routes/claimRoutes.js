@@ -43,6 +43,7 @@ router.put('/updateWithAttachment', upload.single('attachment'), attachFile, upd
 router.put('/updateWithExamPermit', upload.single('examPermit'), attachFile, calculateClaimCost, updateClaims);
 router.put('/updateWithProofOfClaimPayment', upload.single('proofOfClaimPayment'), attachFile, calculateClaimCost, updateClaims);
 router.put('/updateWithOtherAttachments', upload.single('otherAttachments'), attachFile, calculateClaimCost, updateClaims);
+router.put('/updateWithAbsenceJustification', upload.single('absenceJustification'), attachFile, updateClaims);
 router.delete('/delete', remove);
 
 
