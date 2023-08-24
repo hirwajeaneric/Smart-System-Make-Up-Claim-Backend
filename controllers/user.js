@@ -192,23 +192,21 @@ const requestPasswordReset = async(req, res, next) => {
   
     let token = jwt.sign({ role: role, email: email }, process.env.JWT_SECRET, { expiresIn: 1800 }); 
     
-    let clientDomain = '192.168.43.16';
-
     let link = '';
     if (role === 'Student'){
-        link = `http://${clientDomain || localhost}:3333/student/s/auth/reset-password/${token}/${registeredUser._id}`; 
-    } else if (role === 'Lecturer') {
-        link = `http://${clientDomain || localhost}:3333/lecturer/l/auth/reset-password/${token}/${registeredUser._id}`;
-    } else if (role === 'Hod/Dean') {
-        link = `http://${clientDomain || localhost}:3333/hod/h/auth/reset-password/${token}/${registeredUser._id}`;
-    } else if (role === 'Director of student discipline') {
-        link = `http://${clientDomain || localhost}:3333/dsd/d/auth/reset-password/${token}/${registeredUser._id}`;
+        link = `${process.env.CLIENT_ADDRESS || "http://127.0.0.1:4444"}/student/auth/reset-password/${token}/${registeredUser._id}`; 
+    } else if (role === 'Teacher') {
+        link = `${process.env.CLIENT_ADDRESS || "http://127.0.0.1:4444"}/lecturer/auth/reset-password/${token}/${registeredUser._id}`;
+    } else if (role === 'Head of Department') {
+        link = `${process.env.CLIENT_ADDRESS || "http://127.0.0.1:4444"}/hod/auth/reset-password/${token}/${registeredUser._id}`;
+    } else if (role === 'Dean of Students') {
+        link = `${process.env.CLIENT_ADDRESS || "http://127.0.0.1:4444"}/dos/auth/reset-password/${token}/${registeredUser._id}`;
     } else if (role === 'Accountant') {
-        link = `http://${clientDomain || localhost}:3333/accountant/a/auth/reset-password/${token}/${registeredUser._id}`;
-    } else if (role === 'Examination officer') {
-        link = `http://${clientDomain || localhost}:3333/exo/e/auth/reset-password/${token}/${registeredUser._id}`;
-    } else if (role === 'Registration officer') {
-        link = `http://${clientDomain || localhost}:3333/reg/r/auth/reset-password/${token}/${registeredUser._id}`;
+        link = `${process.env.CLIENT_ADDRESS || "http://127.0.0.1:4444"}/accountant/auth/reset-password/${token}/${registeredUser._id}`;
+    } else if (role === 'Examination Officer') {
+        link = `${process.env.CLIENT_ADDRESS || "http://127.0.0.1:4444"}/examinationoffice/auth/reset-password/${token}/${registeredUser._id}`;
+    } else if (role === 'Registration Officer') {
+        link = `${process.env.CLIENT_ADDRESS || "http://127.0.0.1:4444"}/registration/auth/reset-password/${token}/${registeredUser._id}`;
     } 
 
     await sendEmail(

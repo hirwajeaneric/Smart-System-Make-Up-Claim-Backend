@@ -45,6 +45,7 @@ const claimSchema = new mongoose.Schema({
     examPermit: { type: String, required: false },
     proofOfTuitionPayment: { type: String, required: [true, 'A registration form that proves that you have submitted full semester payment must be provided'] },
     proofOfClaimPayment: { type: String, required: false },
+    absenceJustification: { type: String, required: false },
     attachment: { type: String, required: false },
     otherAttachment: { type: String, required: false },
     totalClaimCost: { type: Number, required: false },
@@ -128,8 +129,8 @@ const claimSchema = new mongoose.Schema({
         type: String,
         require: true,
         enum: { 
-            values: ['Pending','In Progress', 'Confirmed'],
-            message: '{VALUE} is not supported as a signature'
+            values: ['Pending','In Progress', 'Confirmed', 'Rejected'],
+            message: '{VALUE} is not supported as a status'
         }, 
         default: 'Pending', 
     },
