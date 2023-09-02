@@ -15,8 +15,6 @@ const upload = multer({ storage: multerStorage});
 
 // Middleware for attaching files to the request body before saving.
 const attachFile = (req, res, next) => {
-    console.log(req.body);
-
     if (req.file.fieldname === 'proofOfTuitionPayment') {
         req.body.proofOfTuitionPayment = req.file.filename;
     } else if (req.file.fieldname === 'examPermit') {
@@ -30,8 +28,7 @@ const attachFile = (req, res, next) => {
     } else if (req.file.fieldname === 'absenceJustification') {
         req.body.absenceJustification = req.file.filename;
     }
-
-    console.log(req.body);
+    
     next();
 }
 

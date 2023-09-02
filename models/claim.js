@@ -16,6 +16,7 @@ const claimSchema = new mongoose.Schema({
     department: { type: String, required: [ true, 'Department must be provided' ] },
     academicYear: { type: String, required: [ true, 'Academic year must be provided' ] },
     semester: { type: String, required: [ true, 'Semester must be provided' ] },
+    period: {type: String, required: [true, 'Examination period must be provided']},
     courses: [
         { 
             courseName: { type: String, required: [true, 'Course name must be provided'] },
