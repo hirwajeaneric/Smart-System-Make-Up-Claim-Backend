@@ -4,22 +4,18 @@ const calculateClaimCost = async (req, res, next) => {
     var creditCost = 0;
 
     if (faculty === 'Information Technology') {
-        creditCost = 16829;
+        creditCost = Number(process.env.IT_CLAIM_COST);
     } else if (faculty === 'Business Administration') {
-        creditCost = 15582;
+        creditCost = Number(process.env.BA_CLAIM_COST);
     } else if (faculty === 'Theology') {
-        creditCost = 13712;
+        creditCost = Number(process.env.THEOLOGY_CLAIM_COST);
     } else if (faculty === 'Education') {
-        creditCost = 13712;
+        creditCost = Number(process.env.EDUCATION_CLAIM_COST);
     }
 
     var totalClaimCost = (Number(req.body.courses[0].credits) * creditCost)/4;
 
-    console.log('Calculated cost');
     req.body.totalClaimCost = totalClaimCost;
-
-    console.log(req.body.totalClaimCost);
-
     next();
 }
 
