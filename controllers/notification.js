@@ -44,13 +44,13 @@ const findByStatus = async(req, res) => {
 
 const updateNotification = async(req, res) => {
     const notificationId = req.query.id;
-    const updatedNotification = await Course.findByIdAndUpdate({ _id: notificationId}, req.body);
+    const updatedNotification = await Notification.findByIdAndUpdate({ _id: notificationId}, req.body);
 
     if (!updatedNotification) {
         throw new NotFoundError(`Notification with id ${notificationId} not found!`);
     }
 
-    res.status(StatusCodes.OK).json({ message: 'Changed', payload: updatedNotification})
+    res.status(StatusCodes.OK).json({ message: 'Seen', payload: updatedNotification})
 };
 
 

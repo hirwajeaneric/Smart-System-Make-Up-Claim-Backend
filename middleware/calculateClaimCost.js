@@ -1,28 +1,22 @@
 const calculateClaimCost = async (req, res, next) => {
     const { faculty, courses } = req.body;
-    if (!courses) {
-        next();    
-    } else {
-        let totalClaimCost = 0;
-        let creditCost = 0;
-    
-        if (faculty === 'IT') {
-            creditCost = 16829;
-        } else if (faculty === 'Business administration') {
-            creditCost = 15582;
-        } else if (faculty === 'Theology') {
-            creditCost = 13712;
-        } else if (faculty === 'Education') {
-            creditCost = 13712;
-        }
-    
-        courses.forEach(element => {
-            totalClaimCost = totalClaimCost + (element.credits * creditCost)/4;
-        });
-    
-        req.body.totalClaimCost = totalClaimCost;
-        next();   
+
+    var creditCost = 0;
+
+    if (faculty === 'Information Technology') {
+        creditCost = Number(process.env.IT_CLAIM_COST);
+    } else if (faculty === 'Business Administration') {
+        creditCost = Number(process.env.BA_CLAIM_COST);
+    } else if (faculty === 'Theology') {
+        creditCost = Number(process.env.THEOLOGY_CLAIM_COST);
+    } else if (faculty === 'Education') {
+        creditCost = Number(process.env.EDUCATION_CLAIM_COST);
     }
+
+    var totalClaimCost = (Number(req.body.courses[0].credits) * creditCost)/4;
+
+    req.body.totalClaimCost = totalClaimCost;
+    next();
 }
 
 module.exports = calculateClaimCost;

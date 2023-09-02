@@ -38,11 +38,11 @@ router.get('/findByRegistrationOfficerSignature', authorizeOfficialsClaimAccess,
 router.get('/findByStudentSignature', authorizeOfficialsClaimAccess, findByStudentSignature);
 router.get('/findByFaculty', authorizeOfficialsClaimAccess, findByFaculty);
 router.get('/findByDepartment', authorizeOfficialsClaimAccess, findByDepartment);
-router.put('/update', calculateClaimCost, updateClaims);
+router.put('/update', updateClaims);
 router.put('/updateWithAttachment', upload.single('attachment'), attachFile, updateClaims);
-router.put('/updateWithExamPermit', upload.single('examPermit'), attachFile, calculateClaimCost, updateClaims);
-router.put('/updateWithProofOfClaimPayment', upload.single('proofOfClaimPayment'), attachFile, calculateClaimCost, updateClaims);
-router.put('/updateWithOtherAttachments', upload.single('otherAttachments'), attachFile, calculateClaimCost, updateClaims);
+router.put('/updateWithExamPermit', upload.single('examPermit'), attachFile, updateClaims);
+router.put('/updateWithProofOfClaimPayment', upload.single('proofOfClaimPayment'), attachFile, updateClaims);
+router.put('/updateWithOtherAttachments', upload.single('otherAttachments'), attachFile, updateClaims);
 router.put('/updateWithAbsenceJustification', upload.single('absenceJustification'), attachFile, updateClaims);
 router.delete('/delete', remove);
 

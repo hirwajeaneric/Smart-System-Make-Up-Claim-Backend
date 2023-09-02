@@ -1,4 +1,5 @@
 const Claim = require('../models/claim');
+const NotificationModel = require('../models/notification')
 const { StatusCodes } = require('http-status-codes');
 const { BadRequestError } = require('../errors/index');
 const sendEmail = require('../utils/email/sendEmail');
@@ -14,8 +15,6 @@ const upload = multer({ storage: multerStorage});
 
 // Middleware for attaching files to the request body before saving.
 const attachFile = (req, res, next) => {
-    console.log(req.body);
-
     if (req.file.fieldname === 'proofOfTuitionPayment') {
         req.body.proofOfTuitionPayment = req.file.filename;
     } else if (req.file.fieldname === 'examPermit') {
@@ -29,8 +28,7 @@ const attachFile = (req, res, next) => {
     } else if (req.file.fieldname === 'absenceJustification') {
         req.body.absenceJustification = req.file.filename;
     }
-
-    console.log(req.body);
+    
     next();
 }
 
@@ -50,8 +48,25 @@ const createClaim = async (req, res) => {
 };
 
 const updateClaims = async(req, res) => {
+    // Claim before update
+    var existingClaim = Claim.findById(req.query.id);
+
     const updated = await Claim.findByIdAndUpdate({_id: req.query.id}, req.body);
     const updatedClaim = await Claim.findById(updated._id);
+
+    // Check if the updates involved signing on the lecturer's behalf.
+    if (!existingClaim.attachment && updatedClaim.attachment) {
+        // Sending notifications
+        const newNotification = await NotificationModel.create({
+            text: `New claim from ${updatedClaim.fullName}`,
+            subject: 'New claim',
+            recipient: 'Head of Department',
+            department: updatedClaim.department,
+            claimId: updatedClaim._id,
+            status: 'New'
+        })
+    }
+
     res.status(StatusCodes.OK).json({ message: 'Claim updated', payload: updatedClaim })
 };
 
