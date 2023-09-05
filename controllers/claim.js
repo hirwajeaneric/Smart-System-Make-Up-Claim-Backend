@@ -67,6 +67,35 @@ const updateClaims = async(req, res) => {
         })
     }
 
+    // HOD Signature
+    if (updatedClaim.hodDeanSignature.signature !== existingClaim.hodDeanSignature.signature && updatedClaim.hodDeanSignature.signature === 'Rejected') {
+        await sendEmail(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString} was rejected by the head of department office.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+    }
+
+    // Examination officer Signature
+    if (updatedClaim.examinationOfficerSignature.signature !== existingClaim.examinationOfficerSignature.signature && updatedClaim.examinationOfficerSignature.signature === 'Rejected') {
+        await sendEmail(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString} was rejected by the examination office.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+    }
+
+    // Dean of students Signature
+    if (updatedClaim.deanOfStudentsSignature.signature !== existingClaim.deanOfStudentsSignature.signature && updatedClaim.deanOfStudentsSignature.signature === 'Rejected') {
+        await sendEmail(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString} was rejected by the dean of students.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+    }
+
+    // Registration office Signature
+    if (updatedClaim.registrationOfficerSignature.signature !== existingClaim.registrationOfficerSignature.signature && updatedClaim.registrationOfficerSignature.signature === 'Rejected') {
+        await sendEmail(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString} was rejected by the registration office.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+    }
+
+    // Final signature by the accounting office
+    if (updatedClaim.accountantSignature.signature !== existingClaim.accountantSignature.signature) {
+        if (updatedClaim.accountantSignature.signature === 'Signed') {
+            await sendEmail(updatedClaim.email, 'Claim approved',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString} is now approved.\n\nBest regards, \n\nSSEMC`);
+        } else if (updatedClaim.accountantSignature.signature === 'Rejected') {
+            await sendEmail(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString} was rejected by the accounting office.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+        }
+    }
+
     res.status(StatusCodes.OK).json({ message: 'Claim updated', payload: updatedClaim })
 };
 
