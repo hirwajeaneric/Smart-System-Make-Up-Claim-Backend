@@ -88,7 +88,7 @@ const UserSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        default: 'No'
+        default: 'Active'
     }
 }) 
 

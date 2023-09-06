@@ -24,6 +24,10 @@ const signIn = async (req, res) => {
         throw new UnauthenticatedError('Invalid Credentials');
     }
 
+    if (user.status === 'Inactive') {
+        throw new UnauthenticatedError('Access denied');
+    }
+
     const isPasswordCorrect = await user.comparePassword(password);
     if (!isPasswordCorrect) {
         throw new UnauthenticatedError('Invalid Credentials');
@@ -125,6 +129,28 @@ const signUp = async (req, res) => {
 
 };
 
+const add = async (req, res) => {
+    // Checking if the user is not already registered
+    const userWithEmailExists = await User.findOne({ email: req.body.email })
+    if (userWithEmailExists) {
+        return res.status(StatusCodes.BAD_REQUEST).send({ msg: `User with the provided email already exists.` });
+    }
+
+    // Validate password
+    const schema = Joi.object({
+        password: passwordComplexity().required().label('Password'),
+    });
+
+    const {error} = schema.validate({password: req.body.password});
+    if (error) { return res.status(StatusCodes.BAD_REQUEST).send({ msg: error.details[0].message }) }
+    
+    // Registering the user
+    const user = await User.create({...req.body});
+    res.status(StatusCodes.CREATED).json({
+        message: 'Account created',
+    });
+};
+
 const getUsers = async(req, res, next) => {
     const users = await User.find({})
     res.status(StatusCodes.OK).json({ nbHits: users.length, users })
@@ -180,6 +206,15 @@ const updateUser = async(req, res, next) => {
             department: updatedUser.department,
             token: token,
         }
+    })
+};
+
+const deleteUser = async(req, res, next) => {
+    console.log(req.query);
+
+    await User.findByIdAndDelete({_id: req.query.id});
+	res.status(StatusCodes.OK).json({
+        message: "Deleted!",
     })
 };
 
@@ -254,4 +289,18 @@ const resetPassword = async(req, res, next) => {
     }
 }
 
-module.exports = { testing, signIn, signInAsStudent, signUp, requestPasswordReset, findByRole, resetPassword, getUsers, findById, findByRegistrationNumber, updateUser }
+module.exports = { 
+    testing, 
+    signIn, 
+    signInAsStudent, 
+    signUp, 
+    requestPasswordReset, 
+    findByRole, 
+    resetPassword, 
+    getUsers, 
+    findById, 
+    findByRegistrationNumber, 
+    updateUser, 
+    add,
+    deleteUser
+}
