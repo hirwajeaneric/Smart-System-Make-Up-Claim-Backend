@@ -4,6 +4,7 @@ const { StatusCodes } = require('http-status-codes');
 const { BadRequestError } = require('../errors/index');
 const sendEmail = require('../utils/email/sendEmail');
 const multer= require('multer');
+const SENDEMAIL = require('../utils/SendEmail');
 
 // Establishing a multer storage
 const multerStorage = multer.diskStorage({
@@ -49,7 +50,7 @@ const createClaim = async (req, res) => {
 
 const updateClaims = async(req, res) => {
     // Claim before update
-    var existingClaim = Claim.findById(req.query.id);
+    var existingClaim = await Claim.findById(req.query.id);
 
     const updated = await Claim.findByIdAndUpdate({_id: req.query.id}, req.body);
     const updatedClaim = await Claim.findById(updated._id);
@@ -65,6 +66,36 @@ const updateClaims = async(req, res) => {
             claimId: updatedClaim._id,
             status: 'New'
         })
+    }
+
+    // HOD Signature
+    if (updatedClaim.hodDeanSignature.signature !== existingClaim.hodDeanSignature.signature && updatedClaim.hodDeanSignature.signature === 'Rejected') {
+        await SENDEMAIL(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString()} was rejected by the head of department office.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+    }
+
+    // Examination officer Signature
+    if (updatedClaim.examinationOfficerSignature.signature !== existingClaim.examinationOfficerSignature.signature && updatedClaim.examinationOfficerSignature.signature === 'Rejected') {
+        await SENDEMAIL(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString()} was rejected by the examination office.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+    }
+
+    // Dean of students Signature
+    if (updatedClaim.deanOfStudentsSignature.signature !== existingClaim.deanOfStudentsSignature.signature && updatedClaim.deanOfStudentsSignature.signature === 'Rejected') {
+        await SENDEMAIL(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString()} was rejected by the dean of students.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+    }
+
+    // Registration office Signature
+    if (updatedClaim.registrationOfficerSignature.signature !== existingClaim.registrationOfficerSignature.signature && updatedClaim.registrationOfficerSignature.signature === 'Rejected') {
+        await SENDEMAIL(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString()} was rejected by the registration office.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+    }
+
+    // Final signature by the accounting office
+    if (updatedClaim.accountantSignature.signature !== existingClaim.accountantSignature.signature) {
+        if (updatedClaim.accountantSignature.signature === 'Signed') {
+            await Claim.findByIdAndUpdate({ _id: updatedClaim._id }, { status: 'Confirmed' });
+            await SENDEMAIL(updatedClaim.email, 'Claim approved',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString()} is now approved.\n\nBest regards, \n\nSSEMC`);
+        } else if (updatedClaim.accountantSignature.signature === 'Rejected') {
+            await SENDEMAIL(updatedClaim.email, 'Claim rejected',  `Dear ${updatedClaim.fullName}, \n\nYour claim for make up exam submitted on ${new Date(updatedClaim.submitDate).toDateString()} was rejected by the accounting office.\n\nPlease check your claim details for more information. \n\nBest regards, \n\nSSEMC`);
+        }
     }
 
     res.status(StatusCodes.OK).json({ message: 'Claim updated', payload: updatedClaim })
